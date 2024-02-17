@@ -17,7 +17,15 @@ def homepage():
     
 
 
-@app.route('/')
+@app.route('/check-word')
+def check_word():
+    """Check if word is in dictionary"""
+
+    word = request.args["word"]
+    board = session["board"]
+    response = boggle_game.check_valid_word(board, word)
+
+    
 
 
 
