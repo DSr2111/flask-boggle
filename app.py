@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, jsonify
 from boggle import Boggle
 
 boggle_game = Boggle()
@@ -25,8 +25,19 @@ def check_word():
     board = session["board"]
     response = boggle_game.check_valid_word(board, word)
 
-    
+    return jsonify({'result': response})
 
 
 
-@app.route('/')
+@app.route('/post-score', methods=["POST"])
+def post_score():
+    """Get score, update nplays number, update high score"""
+
+    score= request.json["score"]
+    highscore = session.get("highscore", 0)
+    nplays = session.get("nplays", 0)
+
+    session['nplays'] = nplays + 1
+    session['highscore'] = max(score, highscore)
+
+    return jsonify(brokeRecord=score > highscore)
